@@ -45,8 +45,9 @@ void ByteStream::pop_output(const size_t len) {
 std::string ByteStream::read(const size_t len) {
     size_t minLen = min(len, m_deq.size());
     m_bytes_read += minLen;
+    string ret = string().assign(m_deq.begin(), m_deq.begin() + minLen);
     pop_output(minLen);
-    return string().assign(m_deq.begin(), m_deq.begin() + minLen);
+    return ret;
 }
 
 void ByteStream::end_input() { m_input_ended = true; }
