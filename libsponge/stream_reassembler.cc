@@ -65,7 +65,6 @@ void StreamReassembler::push_substring(const string &data, const size_t index, c
 
     // check is stream EOF
     if(_first_unassembled == _idxEOF+1 && empty() ){
-        _output.pop_output(_output.buffer_size());
         _output.end_input();
         _first_unread = _first_unassembled = 0;
         _idxEOF = _capacity;
