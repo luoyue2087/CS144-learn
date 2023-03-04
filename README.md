@@ -1,3 +1,18 @@
+# 前言
+CS144 实验课 2021版
+# 实验目标
+学习并掌握TCP/IP的基础编码知识
+# 完成情况
+- [x] Lab 0 : simple Internet applications
+- [x] Lab 1 : stream assembler
+- [ ] Lab 2 : TCP receiver
+- [ ] Lab 3 : TCP sender
+- [ ] Lab 4 : TCP connection
+- [ ] Lab 5 : Network Interface
+- [ ] Lab 6 : IP routing
+- [ ] Lab 7 : Putting it all together 
+
+# origin readme.md content
 For build prereqs, see [the CS144 VM setup instructions](https://web.stanford.edu/class/cs144/vm_howto).
 
 ## Sponge quickstart

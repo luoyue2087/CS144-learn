@@ -36,19 +36,22 @@ void StreamReassembler::push_substring(const string &data, const size_t index, c
     // caclulate index ture pos in StreamReassembler
     if (true_index < _first_unread) {
         true_index = _first_unread;
-        true_len -= (true_index - index);
+        if(true_index - index<=true_len) //if whole data already in _output, then drop this data
+            true_len -= (true_index - index);
+        else
+            return;
         data_idx += (true_index - index);
     }
 
     size_t in_index = true_index - _first_unread;
 
-    if (in_index + true_len > _capacity) {
-        return;
-    }
+    // if (in_index + true_len > _capacity) {
+    //     return;
+    // }
 
     // push data into StreamReassembler only the index-data not arrived before
 
-    for (deque<char>::size_type i = 0; i < true_len; ++i) {
+    for (deque<char>::size_type i = 0; i < true_len && in_index + i<_capacity; ++i) {
         if (_st[in_index + i] == false)
             ++_cnt_substring;
 
@@ -64,7 +67,8 @@ void StreamReassembler::push_substring(const string &data, const size_t index, c
     // update next glossy index
     if (in_index == _first_unassembled - _first_unread) {
         while (_first_unassembled - _first_unread < _capacity &&
-               _st[_first_unassembled - _first_unread])
+               _st[_first_unassembled - _first_unread] && 
+               _first_unassembled - _first_unread < _capacity)
             ++_first_unassembled;
     }
 
