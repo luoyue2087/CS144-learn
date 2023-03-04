@@ -19,7 +19,8 @@ StreamReassembler::StreamReassembler(const size_t capacity)
     , _first_unassembled(0)
     , _idxEOF(capacity+5)
     , _cnt_substring(0)
-    , _substrings(capacity) {}
+    , _substrings(capacity)
+    , _st(deque<bool>(capacity, false)) {}
 
 //! \details This function accepts a substring (aka a segment) of bytes,
 //! possibly out-of-order, from the logical stream, and assembles any newly
@@ -27,8 +28,10 @@ StreamReassembler::StreamReassembler(const size_t capacity)
 void StreamReassembler::push_substring(const string &data, const size_t index, const bool eof) {
     size_t true_index = index, true_len = data.size(), data_idx = 0;
     // keep _substrings size is equal to capacity
-    while (_substrings.size() < _capacity)
+    while (_substrings.size() < _capacity){
         _substrings.push_back('\0');
+        _st.push_back(false);
+    }
 
     // caclulate index ture pos in StreamReassembler
     if (true_index < _first_unread) {
@@ -46,10 +49,11 @@ void StreamReassembler::push_substring(const string &data, const size_t index, c
     // push data into StreamReassembler only the index-data not arrived before
 
     for (deque<char>::size_type i = 0; i < true_len; ++i) {
-        if (_substrings[in_index + i] == '\0')
+        if (_st[in_index + i] == false)
             ++_cnt_substring;
 
         _substrings[in_index + i] = data[data_idx];
+        _st[in_index + i] = true;
         ++data_idx;
     }
 
@@ -60,7 +64,7 @@ void StreamReassembler::push_substring(const string &data, const size_t index, c
     // update next glossy index
     if (in_index == _first_unassembled - _first_unread) {
         while (_first_unassembled - _first_unread < _capacity &&
-               _substrings[_first_unassembled - _first_unread] != '\0')
+               _st[_first_unassembled - _first_unread])
             ++_first_unassembled;
     }
 
@@ -70,13 +74,13 @@ void StreamReassembler::push_substring(const string &data, const size_t index, c
         string front_data;
         for (size_t i = 0; i < len; ++i) {
             front_data.push_back(_substrings[i]);
-            
         }
         size_t write_data_len = _output.write(front_data);
         _first_unread += write_data_len;
         _cnt_substring -= write_data_len;
         for (size_t i = 0; i < write_data_len; ++i) {
             _substrings.pop_front();
+            _st.pop_front();
         }
     }
 
