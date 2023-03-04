@@ -25,46 +25,63 @@ StreamReassembler::StreamReassembler(const size_t capacity)
 //! possibly out-of-order, from the logical stream, and assembles any newly
 //! contiguous substrings and writes them into the output stream in order.
 void StreamReassembler::push_substring(const string &data, const size_t index, const bool eof) {
-    // check _substrings is bigger than capacity
+    size_t true_index = index, true_len = data.size(), data_idx = 0;
+    // keep _substrings size is equal to capacity
     while (_substrings.size() < _capacity)
-        _substrings.push_back("");
+        _substrings.push_back('\0');
 
     // caclulate index ture pos in StreamReassembler
-    size_t in_index = index - _first_unread;
-    if (in_index >= _capacity)
+    if (true_index < _first_unread) {
+        true_index = _first_unread;
+        true_len -= (true_index - index);
+        data_idx += (true_index - index);
+    }
+
+    size_t in_index = true_index - _first_unread;
+
+    if (in_index + true_len > _capacity) {
         return;
+    }
 
     // push data into StreamReassembler only the index-data not arrived before
-    if(_substrings[in_index].empty()){
-        _cnt_substring+=data.size();
-        _substrings[in_index] = data;
+
+    for (deque<char>::size_type i = 0; i < true_len; ++i) {
+        if (_substrings[in_index + i] == '\0')
+            ++_cnt_substring;
+
+        _substrings[in_index + i] = data[data_idx];
+        ++data_idx;
     }
 
     // check is eof idx
     if (eof)
-        _idxEOF = index;
+        _idxEOF = true_index + true_len;
 
     // update next glossy index
     if (in_index == _first_unassembled - _first_unread) {
         while (_first_unassembled - _first_unread < _capacity &&
-               _substrings[_first_unassembled - _first_unread].size() > 0)
+               _substrings[_first_unassembled - _first_unread] != '\0')
             ++_first_unassembled;
     }
 
     // output assembled data into streamer
-    while(_first_unread!=_first_unassembled){
-        string front_data = _substrings.front();
-        _substrings.pop_front();
-        while(_output.write(front_data)!=front_data.size()){
-            sleep(1);
+    if (_first_unread != _first_unassembled) {
+        size_t len = _first_unassembled - _first_unread;
+        string front_data;
+        for (size_t i = 0; i < len; ++i) {
+            front_data.push_back(_substrings[i]);
+            
         }
-        ++_first_unread;
-        _cnt_substring-=front_data.size();
+        size_t write_data_len = _output.write(front_data);
+        _first_unread += write_data_len;
+        _cnt_substring -= write_data_len;
+        for (size_t i = 0; i < write_data_len; ++i) {
+            _substrings.pop_front();
+        }
     }
-    
 
     // check is stream EOF
-    if(_first_unassembled == _idxEOF+1 && empty() ){
+    if (_output.bytes_written() == _idxEOF && empty()) {
         _output.end_input();
         _first_unread = _first_unassembled = 0;
         _idxEOF = _capacity;
@@ -73,4 +90,4 @@ void StreamReassembler::push_substring(const string &data, const size_t index, c
 // The number of bytes in the substrings stored but not yet reassembled
 size_t StreamReassembler::unassembled_bytes() const { return _cnt_substring; }
 // Is the internal state empty (other than the output stream)?
-bool StreamReassembler::empty() const { return _cnt_substring==0; }
+bool StreamReassembler::empty() const { return _cnt_substring == 0; }

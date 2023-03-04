@@ -2,10 +2,11 @@
 #define SPONGE_LIBSPONGE_STREAM_REASSEMBLER_HH
 
 #include "byte_stream.hh"
-#include <unistd.h>
+
 #include <cstdint>
 #include <deque>
 #include <string>
+#include <unistd.h>
 
 //! \brief A class that assembles a series of excerpts from a byte stream (possibly out of order,
 //! possibly overlapping) into an in-order byte stream.
@@ -14,8 +15,8 @@ class StreamReassembler {
     // Your code here -- add private members as necessary.
     ByteStream _output;  //!< The reassembled in-order byte stream
     size_t _capacity;    //!< The maximum number of bytes
-    size_t _first_unread, _first_unassembled, _idxEOF,_cnt_substring;
-    std::deque<std::string> _substrings;
+    size_t _first_unread, _first_unassembled, _idxEOF, _cnt_substring;
+    std::deque<char> _substrings;
 
   public:
     //! \brief Construct a `StreamReassembler` that will store up to `capacity` bytes.
