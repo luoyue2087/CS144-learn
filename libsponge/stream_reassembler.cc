@@ -17,7 +17,7 @@ StreamReassembler::StreamReassembler(const size_t capacity)
     , _capacity(capacity)
     , _first_unread(0)
     , _first_unassembled(0)
-    , _idxEOF(capacity)
+    , _idxEOF(capacity+5)
     , _cnt_substring(0)
     , _substrings(capacity) {}
 
@@ -84,7 +84,7 @@ void StreamReassembler::push_substring(const string &data, const size_t index, c
     if (_output.bytes_written() == _idxEOF && empty()) {
         _output.end_input();
         _first_unread = _first_unassembled = 0;
-        _idxEOF = _capacity;
+        _idxEOF = -1;
     }
 }
 // The number of bytes in the substrings stored but not yet reassembled
