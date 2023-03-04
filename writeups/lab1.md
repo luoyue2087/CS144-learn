@@ -20,10 +20,11 @@ Implementation Challenges:
 - [x] 有可能一个片段长度等于capacity，且没有EOF
 - [x] 有可能一个片段长度等于capacity，且有EOF，并且需要能获得该片段
 - [x] 碎片可能交叉或重叠:SubmitSegment{"abc", 0},SubmitSegment{"bcdefgh", 1}
-- [ ] 有可能导致lab0的缓冲区满 
+- [x] 有可能导致lab0的缓冲区满 
+
 
 Remaining Bugs:
-[]
+- [ ] 数据量太多，unassembled_bytes 异常
 
 - Optional: I had unexpected difficulty with: [describe]
 

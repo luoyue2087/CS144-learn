@@ -6,7 +6,6 @@
 #include <cstdint>
 #include <deque>
 #include <string>
-#include <unistd.h>
 
 //! \brief A class that assembles a series of excerpts from a byte stream (possibly out of order,
 //! possibly overlapping) into an in-order byte stream.
