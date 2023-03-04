@@ -45,6 +45,7 @@ void ByteStream::pop_output(const size_t len) {
 std::string ByteStream::read(const size_t len) {
     size_t minLen = min(len, m_deq.size());
     m_bytes_read += minLen;
+    pop_output(minLen);
     return string().assign(m_deq.begin(), m_deq.begin() + minLen);
 }
 
@@ -64,4 +65,4 @@ size_t ByteStream::bytes_written() const { return m_bytes_written; }
 
 size_t ByteStream::bytes_read() const { return m_bytes_read; }
 
-size_t ByteStream::remaining_capacity() const { return m_capacity-m_deq.size(); }
+size_t ByteStream::remaining_capacity() const { return m_capacity - m_deq.size(); }
