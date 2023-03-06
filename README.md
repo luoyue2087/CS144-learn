@@ -12,6 +12,28 @@ CS144 实验课 2021版
 - [ ] Lab 6 : IP routing
 - [ ] Lab 7 : Putting it all together 
 
+# 注释
+* 首先要安装g++-8或clang-6，请根据自己的linux发行版自行搜索对应方法。我用的是g++-8，如果安装后CMAKE的时候还是提示g++版本不够，那就百度一下怎么把用g++-8替代gcc，再不行的话那就为gcc-8创建一个名为cc的软连接，为g++-8创建一个名为c++的软链接。
+
+* 另外，如果你CMAKE的时候报出了如下错误：
+
+```bash
+CMake Error: The following variables are used in this project, but they are set to NOTFOUND.
+Please set them or make sure they are set and tested correctly in the CMake files:
+LIBPCAP
+    linked by target "udp_tcpdump" in directory /home/kangyu/sponge/apps
+    linked by target "ipv4_parser" in directory /home/kangyu/sponge/tests
+    linked by target "ipv4_parser" in directory /home/kangyu/sponge/tests
+    linked by target "tcp_parser" in directory /home/kangyu/sponge/tests
+    linked by target "tcp_parser" in directory /home/kangyu/sponge/tests
+```
+```bash
+sudo apt-get install libpcap-dev
+```
+
+# 参考
+* [康宇PL's Blog](https://www.cnblogs.com/kangyupl/p/stanford_cs144_labs.html)
+
 # origin readme.md content
 For build prereqs, see [the CS144 VM setup instructions](https://web.stanford.edu/class/cs144/vm_howto).
 
