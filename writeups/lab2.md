@@ -1,29 +1,47 @@
+## 开始
+```bash
+git branch lab2 - startercode
+git fetch
+git merge origin / lab2 - startercode
+```
+
+## 任务
+
+TheTCPReceiverreceives segments fromthe Internet(via thesegment received()method) and turns them into calls to yourStreamReassembler, which eventually writes to the incomingByteStream.
+
+In addition to writing to the incoming stream, theTCPReceiveris responsible for telling thesender two things :
+1.the index of the “first unassembled” byte, which is called the “acknowledgment number”or “ackno.” This is the first byte that the receiver needs from the sender.
+2.the distance between the “first unassembled” index and the “first unacceptable” index.This is called the “window size”.
+
+- []
+
+## origin readme.md
 Lab 2 Writeup
-=============
+============ =
 
-My name: [your name here]
+My name : [your name here]
 
-My SUNet ID: [your sunetid here]
+My SUNet ID : [your sunetid here]
 
-I collaborated with: [list sunetids here]
+I collaborated with : [list sunetids here]
 
-I would like to thank/reward these classmates for their help: [list sunetids here]
+I would like to thank / reward these classmates for their help : [list sunetids here]
 
-This lab took me about [n] hours to do. I [did/did not] attend the lab session.
+This lab took me about[n] hours to do.I[did / did not] attend the lab session.
 
-Program Structure and Design of the TCPReceiver and wrap/unwrap routines:
+Program Structureand Design of the TCPReceiverand wrap / unwrap routines :
 []
 
-Implementation Challenges:
+Implementation Challenges :
 []
 
-Remaining Bugs:
+Remaining Bugs :
 []
 
-- Optional: I had unexpected difficulty with: [describe]
+- Optional : I had unexpected difficulty with : [describe]
 
-- Optional: I think you could make this lab better by: [describe]
+- Optional : I think you could make this lab better by : [describe]
 
-- Optional: I was surprised by: [describe]
+- Optional : I was surprised by : [describe]
 
-- Optional: I'm not sure about: [describe]
+- Optional : I'm not sure about: [describe]
