@@ -3,8 +3,8 @@ CS144 实验课 2021版
 # 实验目标
 学习并掌握TCP/IP的基础编码知识
 # 完成情况
-- [x] Lab 0 : simple Internet applications
-- [x] Lab 1 : stream assembler
+- [x] Lab 0 : a flow-controlled byte stream (ByteStream).
+- [x] Lab 1 : stream assembler (StreamReassembler).
 - [ ] Lab 2 : TCP receiver
 - [ ] Lab 3 : TCP sender
 - [ ] Lab 4 : TCP connection
