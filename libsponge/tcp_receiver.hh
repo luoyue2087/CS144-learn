@@ -7,6 +7,7 @@
 #include "wrapping_integers.hh"
 
 #include <optional>
+#include <vector>
 
 //! \brief The "receiver" part of a TCP implementation.
 
@@ -20,12 +21,28 @@ class TCPReceiver {
     //! The maximum number of bytes we'll store.
     size_t _capacity;
 
+    // have already receive Bytes data, have already reassemb Bytes data
+    uint64_t _reassembByteNum;
+    // if have not receive syn segment, push it into this buffer
+    std::vector<TCPSegment> _tcpReceiverBuffer;
+    // flag
+    bool _is_recv_SYN, _is_recv_FIN;
+    WrappingInt32 _ISN, _FIN;
+
   public:
     //! \brief Construct a TCP receiver
     //!
     //! \param capacity the maximum number of bytes that the receiver will
     //!                 store in its buffers at any give time.
-    TCPReceiver(const size_t capacity) : _reassembler(capacity), _capacity(capacity) {}
+    TCPReceiver(const size_t capacity)
+        : _reassembler(capacity)
+        , _capacity(capacity)
+        , _reassembByteNum(0)
+        , _tcpReceiverBuffer(0)
+        , _is_recv_SYN(false)
+        , _is_recv_FIN(false)
+        , _ISN(0)
+        , _FIN(0) {}
 
     //! \name Accessors to provide feedback to the remote TCPSender
     //!@{
