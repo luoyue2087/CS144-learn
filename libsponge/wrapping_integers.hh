@@ -3,6 +3,12 @@
 
 #include <cstdint>
 #include <ostream>
+#include <cmath>
+/**
+ * converting between sequence numbers and absolute sequencenumbers is a bit harder, 
+ * and confusing the two can produce tricky bugs. 
+ * To prevent these bugssystematically, we’ll represent sequence numbers with a custom type:WrappingInt32
+*/
 
 //! \brief A 32-bit integer, expressed relative to an arbitrary initial sequence number (ISN)
 //! \note This is used to express TCP sequence numbers (seqno) and acknowledgment numbers (ackno)
