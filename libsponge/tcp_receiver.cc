@@ -8,42 +8,47 @@
 using namespace std;
 
 void TCPReceiver::segment_received(const TCPSegment &seg) {
-
     // 1. receive ISN
     if (_is_recv_ISN) {
-        size_t payloadSize = seg.payload().size();
-        size_t reassemblerSize = _reassembler.stream_out().buffer_size();//reassembler.buffer.size
+        // size_t payloadSize = seg.payload().size();
+        // size_t reassemblerSize = _reassembler.stream_out().buffer_size();//reassembler.buffer.size
 
+        _reassembByteNum = _reassembler.getFirstUnassembled();
         uint64_t seqno_abs = unwrap(seg.header().seqno, _ISN, _reassembByteNum);
-        _reassembler.push_substring(seg.payload().copy(), seqno_abs - 1, seg.header().fin);//-1 for ISN have one byte
+        _reassembler.push_substring(seg.payload().copy(), seqno_abs - 1, seg.header().fin);  //-1 for ISN have one byte
 
-        _reassembByteNum += (reassemblerSize + payloadSize - _reassembler.unassembled_bytes());
-    }else{
+        // _reassembByteNum += (reassemblerSize + payloadSize - _reassembler.unassembled_bytes());
+    } else {
         // 2. no receive ISN and cur is ISN
-        if(seg.header().syn){
+        if (seg.header().syn) {
             _is_recv_ISN = true;
             _ISN = seg.header().seqno;
-            
+
             // buffer data to reassembler
             size_t bufferSize = _tcpReceiverBuffer.size();
-            if(bufferSize>0){
+            if (bufferSize > 0) {
                 for (size_t iBuffer = 0; iBuffer < bufferSize; ++iBuffer) {
-                    size_t payloadSize = seg.payload().size();
-                    size_t reassemblerSize = _reassembler.stream_out().buffer_size();
+                    // size_t payloadSize = seg.payload().size();
+                    // size_t reassemblerSize = _reassembler.stream_out().buffer_size();
 
+                    _reassembByteNum = _reassembler.getFirstUnassembled();
                     uint64_t seqno_abs = unwrap(seg.header().seqno, _ISN, _reassembByteNum);
                     _reassembler.push_substring(seg.payload().copy(), seqno_abs - 1, seg.header().fin);
-
-                    _reassembByteNum += (reassemblerSize + payloadSize - _reassembler.unassembled_bytes());
                 }
-            }else if (seg.header().fin){//no data and fin=true
-                uint64_t seqno_abs = unwrap(seg.header().seqno, _ISN, _reassembByteNum);
-                _reassembler.push_substring("", seqno_abs, true);
-                ++_reassembByteNum;
+            } else if (seg.header().fin) {  // no data and fin=true
+                // _reassembByteNum = _reassembler.getFirstUnassembled();
+                // uint64_t seqno_abs = unwrap(seg.header().seqno, _ISN, _reassembByteNum);
+                // _reassembler.push_substring("", seqno_abs, true);
+                _reassembler.stream_out().end_input();
+                // ++_reassembByteNum;
             }
-        }else{
-        // 3. no receive ISN and cur is not ISN
-            if (_tcpReceiverBuffer.size() < _capacity)
+        } else {
+            // 3. no receive ISN and cur is not ISN
+            if (seg.header().fin) {
+                _reassembByteNum = _reassembler.getFirstUnassembled();
+                uint64_t seqno_abs = unwrap(seg.header().seqno, _ISN, _reassembByteNum);
+                _reassembler.push_substring(seg.payload().copy(), seqno_abs - 1, seg.header().fin);
+            } else if (_tcpReceiverBuffer.size() < _capacity)
                 _tcpReceiverBuffer.push_back(seg);
             // if buffer over than _capacity, drop out this segment
         }
@@ -57,8 +62,14 @@ void TCPReceiver::segment_received(const TCPSegment &seg) {
 
 // “ackno.” This is the first byte that the receiver needs from the sender
 optional<WrappingInt32> TCPReceiver::ackno() const {
-    if (_is_recv_ISN)
-        return WrappingInt32(wrap(_reassembByteNum + 1, WrappingInt32(_ISN)));
+    if (_is_recv_ISN) {
+        uint64_t tmp = _reassembler.getFirstUnassembled();
+        if (_reassembler.stream_out().input_ended()){ //need check if have receive all data
+            ++tmp;  // FIN = 1 byte
+        }
+        ++tmp;  // ISN = 1 byte
+        return WrappingInt32(wrap(tmp, WrappingInt32(_ISN)));
+    }
     return std::nullopt;
 }
 
