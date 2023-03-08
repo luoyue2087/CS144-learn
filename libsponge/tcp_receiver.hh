@@ -26,7 +26,7 @@ class TCPReceiver {
     // if have not receive syn segment, push it into this buffer
     std::vector<TCPSegment> _tcpReceiverBuffer;
     // flag
-    bool _is_recv_SYN, _is_recv_FIN;
+    bool _is_recv_ISN, _is_recv_FIN;
     WrappingInt32 _ISN, _FIN;
 
   public:
@@ -39,7 +39,7 @@ class TCPReceiver {
         , _capacity(capacity)
         , _reassembByteNum(0)
         , _tcpReceiverBuffer(0)
-        , _is_recv_SYN(false)
+        , _is_recv_ISN(false)
         , _is_recv_FIN(false)
         , _ISN(0)
         , _FIN(0) {}

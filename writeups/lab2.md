@@ -29,7 +29,7 @@ In addition to writing to the incoming stream, theTCPReceiveris responsible for 
 * [TCP头部说明](https://cs144.github.io/doc/lab2/struct_t_c_p_header.html)
 * size_t TCPSegment::length_in_sequence_space() const : Equal to payload length plus one byte if SYN is set, plus one byte if FIN is set
 *  In your TCP implementation, you’ll use the index of the last reassembled byte as the checkpoint.
-* 有可能一个报文段同时是SYN和FIN
+* 有可能一个报文段同时是SYN和FIN, 且没有携带任何数据
 
 * TCPReceiver::segment received()
     * Set the Initial Sequence Number if necessary.
