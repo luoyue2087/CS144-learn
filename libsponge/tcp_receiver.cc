@@ -15,8 +15,9 @@ void TCPReceiver::segment_received(const TCPSegment &seg) {
 
         _reassembByteNum = _reassembler.getFirstUnassembled();
         uint64_t seqno_abs = unwrap(seg.header().seqno, _ISN, _reassembByteNum);
+        printf("---seq_abs: %ld\n", seqno_abs);
         _reassembler.push_substring(seg.payload().copy(), seqno_abs - 1, seg.header().fin);  //-1 for ISN have one byte
-
+        printf("reassembByteNum=%ld\n",_reassembler.getFirstUnassembled());
         // _reassembByteNum += (reassemblerSize + payloadSize - _reassembler.unassembled_bytes());
     } else {
         // 2. no receive ISN and cur is ISN
@@ -33,6 +34,7 @@ void TCPReceiver::segment_received(const TCPSegment &seg) {
 
                     _reassembByteNum = _reassembler.getFirstUnassembled();
                     uint64_t seqno_abs = unwrap(seg.header().seqno, _ISN, _reassembByteNum);
+                    
                     _reassembler.push_substring(seg.payload().copy(), seqno_abs - 1, seg.header().fin);
                 }
             } else if (seg.header().fin) {  // no data and fin=true
@@ -64,6 +66,7 @@ void TCPReceiver::segment_received(const TCPSegment &seg) {
 optional<WrappingInt32> TCPReceiver::ackno() const {
     if (_is_recv_ISN) {
         uint64_t tmp = _reassembler.getFirstUnassembled();
+        printf("----%d\n",_reassembler.stream_out().input_ended());
         if (_reassembler.stream_out().input_ended()){ //need check if have receive all data
             ++tmp;  // FIN = 1 byte
         }
