@@ -26,7 +26,7 @@ CS144 实验课 2021版
 # 完成情况
 - [x] Lab 0 : a flow-controlled byte stream (ByteStream).
 - [x] Lab 1 : stream assembler (StreamReassembler).
-- [ ] Lab 2 : TCP receiver
+- [x] Lab 2 : TCP receiver
 - [ ] Lab 3 : TCP sender
 - [ ] Lab 4 : TCP connection
 - [ ] Lab 5 : Network Interface
