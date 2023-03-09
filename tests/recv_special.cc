@@ -32,7 +32,7 @@ int main() {
         }
 
         /* segment with SYN + data */
-        {
+        { 
             uint32_t isn = uniform_int_distribution<uint32_t>{0, UINT32_MAX}(rd);
             TCPReceiverTestHarness test{4000};
             test.execute(ExpectState{TCPReceiverStateSummary::LISTEN});
@@ -48,7 +48,7 @@ int main() {
         }
 
         /* empty segment */
-        {
+        { 
             uint32_t isn = uniform_int_distribution<uint32_t>{0, UINT32_MAX}(rd);
             TCPReceiverTestHarness test{4000};
             test.execute(ExpectState{TCPReceiverStateSummary::LISTEN});
@@ -67,7 +67,7 @@ int main() {
         }
 
         /* segment with null byte */
-        {
+        { 
             uint32_t isn = uniform_int_distribution<uint32_t>{0, UINT32_MAX}(rd);
             TCPReceiverTestHarness test{4000};
             const string text = "Here's a null byte:"s + '\0' + "and it's gone."s;
