@@ -38,8 +38,8 @@ uint64_t unwrap(WrappingInt32 n, WrappingInt32 isn, uint64_t checkpoint) {
     uint64_t diff = checkpoint - ret;
     uint32_t prob = diff / mod;
 
-    if (prob == 0)
-        return ret + mod;  // prob=0, it means that checkpoint - ret <= mod
+    // if (prob == 0)
+    //     return ret + mod;  // prob=0, it means that checkpoint - ret <= mod
 
     // else find a value that satisfy between left of checkpoint and right of checkpoint
     // and value = ret + k * mod

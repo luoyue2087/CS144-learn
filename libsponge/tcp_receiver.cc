@@ -4,7 +4,7 @@
 
 // For Lab 2, please replace with a real implementation that passes the
 // automated checks run by `make check_lab2`.
-
+#include <iostream>
 using namespace std;
 
 void TCPReceiver::segment_received(const TCPSegment &seg) {
@@ -16,8 +16,9 @@ void TCPReceiver::segment_received(const TCPSegment &seg) {
         _reassembByteNum = _reassembler.getFirstUnassembled();
         uint64_t seqno_abs = unwrap(seg.header().seqno, _ISN, _reassembByteNum);
         printf("---seq_abs: %ld\n", seqno_abs);
+        cout<<seg.payload().copy()<<endl;
         _reassembler.push_substring(seg.payload().copy(), seqno_abs - 1, seg.header().fin);  //-1 for ISN have one byte
-        // printf("reassembByteNum=%ld\n",_reassembler.getFirstUnassembled());
+        printf("reassembByteNum=%ld\n",_reassembler.getFirstUnassembled());
         // _reassembByteNum += (reassemblerSize + payloadSize - _reassembler.unassembled_bytes());
     } else {
         // 2. no receive ISN and cur is ISN
