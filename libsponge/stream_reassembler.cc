@@ -90,8 +90,8 @@ void StreamReassembler::push_substring(const string &data, const size_t index, c
     // check is stream EOF
     if (_output.bytes_written() == _idxEOF && empty()) {
         _output.end_input();
-        _first_unread = _first_unassembled = 0;
-        _idxEOF = -1;
+        // _first_unread = _first_unassembled = 0;
+        // _idxEOF = -1;
     }
 }
 // The number of bytes in the substrings stored but not yet reassembled
