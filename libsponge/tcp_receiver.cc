@@ -17,7 +17,7 @@ void TCPReceiver::segment_received(const TCPSegment &seg) {
         uint64_t seqno_abs = unwrap(seg.header().seqno, _ISN, _reassembByteNum);
         printf("---seq_abs: %ld\n", seqno_abs);
         _reassembler.push_substring(seg.payload().copy(), seqno_abs - 1, seg.header().fin);  //-1 for ISN have one byte
-        printf("reassembByteNum=%ld\n",_reassembler.getFirstUnassembled());
+        // printf("reassembByteNum=%ld\n",_reassembler.getFirstUnassembled());
         // _reassembByteNum += (reassemblerSize + payloadSize - _reassembler.unassembled_bytes());
     } else {
         // 2. no receive ISN and cur is ISN
